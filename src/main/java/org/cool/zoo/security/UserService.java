@@ -38,7 +38,7 @@ public class UserService  implements UserDetailsService {
         User user = null;
 
         if (username != null){
-            user = secUserRepository.findByUsername(username);
+            user =  secUserRepository.findByUsername(username);
         }
 
         if (user == null){

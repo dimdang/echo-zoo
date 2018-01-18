@@ -19,7 +19,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "username", nullable = false, length = 50)
     private String username;
@@ -35,18 +35,18 @@ public class User {
     @Column(name = "activated", nullable = true)
     private boolean activated;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "table_user_role", joinColumns = {
             @JoinColumn(name = "user_id", nullable = false, updatable = true)},
             inverseJoinColumns = {@JoinColumn(name = "role_id",
                     nullable = false, updatable = true)})
     private Set<Role> authorities;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
