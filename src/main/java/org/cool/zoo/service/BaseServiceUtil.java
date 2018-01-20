@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
  * Email    : d.dim@gl-f.com
  */
 
-public interface BaseService<T> {
+public interface BaseServiceUtil<T> {
 
     Page<T> findAll(Pageable pageable);
 

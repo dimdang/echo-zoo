@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class ProductService implements BaseService<Product> {
+public class ProductService implements BaseServiceUtil<Product> {
 
 
     @Autowired
