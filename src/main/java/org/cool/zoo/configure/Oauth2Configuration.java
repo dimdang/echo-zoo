@@ -79,6 +79,11 @@ public class Oauth2Configuration {
         private static final String PROP_SECRET = "secret";
         private static final String PROP_TOKEN_VALIDITY_SECONDS = "tokenValidityInSeconds";
 
+        public static final String SCOPE_READ = "read";
+        public static final String SCOPE_WRITE = "write";
+        public static final String SCOPE_READ_DESC = "Can read only";
+        public static final String SCOPE_WRITE_DESC = "Can write only";
+
         private RelaxedPropertyResolver propertyResolver;
 
         @Autowired
