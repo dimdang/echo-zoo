@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecur
 
 @Configuration
 @EnableWebSecurity
-public class Oauth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -41,7 +41,8 @@ public class Oauth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("api/product");
+                .antMatchers("api/product")
+        ;
     }
 
     @Override

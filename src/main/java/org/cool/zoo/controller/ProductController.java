@@ -1,5 +1,6 @@
 package org.cool.zoo.controller;
 
+import org.cool.zoo.configure.Routes;
 import org.cool.zoo.entities.core.Product;
 import org.cool.zoo.entities.response.JResponseEntity;
 import org.cool.zoo.service.ProductService;
@@ -10,10 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -29,20 +27,46 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-        @ResponseBody
-        @RequestMapping(value ="/product",method = RequestMethod.GET)
-        public JResponseEntity<Object> getProducts(){
-            Page<Product> products = productService.findAll(new PageRequest(0, 10));
-            JResponseEntity<Object> responseEntity = ResponseFactory.build();
-            if (products != null){
-                responseEntity.addBody(products);
-                responseEntity.setStatus(HttpStatus.OK);
-                responseEntity.setMessage("SUCCESS");
-            }else {
-                responseEntity.setStatus(HttpStatus.NOT_FOUND);
-                responseEntity.setMessage("FAIL");
-            }
+    JResponseEntity<Object> responseEntity = null;
 
-            return responseEntity;
+    @ResponseBody
+    @RequestMapping(value = Routes.PRODUCT, method = RequestMethod.GET)
+    public JResponseEntity<Object> getProducts() {
+        Page<Product> products = productService.findAll(new PageRequest(0, 10));
+        responseEntity = ResponseFactory.build();
+        if (products != null) {
+            responseEntity.addBody(products);
+            responseEntity.setStatus(HttpStatus.OK);
+            responseEntity.setMessage("SUCCESSFUL");
+        } else {
+            responseEntity.setStatus(HttpStatus.NOT_FOUND);
+            responseEntity.setMessage("FAILED");
+        }
+
+        return responseEntity;
+    }
+
+    @RequestMapping(value = Routes.PRODUCT + Routes.API_ID, method = RequestMethod.GET)
+    public JResponseEntity<Object> findProductById(@PathVariable(value = "id") long id) {
+        Product product = productService.findById(id);
+        responseEntity = ResponseFactory.build();
+        if (product != null){
+            responseEntity.addBody(product);
+            responseEntity.setStatus(HttpStatus.OK);
+            responseEntity.setMessage("SUCCESS");
+        } else {
+            responseEntity.setStatus(HttpStatus.NOT_FOUND);
+            responseEntity.setMessage("FAILED");
+        }
+        return responseEntity;
+    }
+
+    public JResponseEntity<Object> saveProducts(Product product) {
+        if (product != null){
+            productService.saveOrUpdate(product);
+        }
+        if (productService.saveOrUpdate(product) != null){
+
+        }
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
+
 /**
  * Created by Dang Dim
  * Date     : 18-Jan-18, 12:47 PM
@@ -36,16 +38,7 @@ public class ProductService implements BaseServiceUtil<Product> {
     }
 
     @Override
-    public Product delete(Product entity) {
-        Product product = entity;
-        boolean  isDelete = false;
-        if (entity != null) {
-            productRepository.delete(entity);
-            isDelete = true;
-        }
-        if(isDelete){
-            return product;
-        }
-        return null;
+    public void delete(Long id) {
+        productRepository.delete(id);
     }
 }
