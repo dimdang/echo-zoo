@@ -1,7 +1,7 @@
 package org.cool.zoo.security;
 
-import org.cool.zoo.entities.core.Role;
-import org.cool.zoo.entities.core.User;
+import org.cool.zoo.entities.users.Role;
+import org.cool.zoo.entities.users.User;
 import org.cool.zoo.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

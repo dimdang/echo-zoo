@@ -1,6 +1,6 @@
 package org.cool.zoo.repositories;
 
-import org.cool.zoo.entities.core.User;
+import org.cool.zoo.entities.users.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

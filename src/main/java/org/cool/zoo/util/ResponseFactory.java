@@ -36,6 +36,4 @@ public final class ResponseFactory {
         responseEntity.addBody(key, body);
         return responseEntity;
     }
-
-
 }

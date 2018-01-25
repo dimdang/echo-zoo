@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -29,7 +30,6 @@ public class ProductController {
 
     JResponseEntity<Object> responseEntity = null;
 
-    @ResponseBody
     @RequestMapping(value = Routes.PRODUCT, method = RequestMethod.GET)
     public JResponseEntity<Object> getProducts() {
         Page<Product> products = productService.findAll(new PageRequest(0, 10));
@@ -42,31 +42,52 @@ public class ProductController {
             responseEntity.setStatus(HttpStatus.NOT_FOUND);
             responseEntity.setMessage("FAILED");
         }
-
         return responseEntity;
     }
 
-    @RequestMapping(value = Routes.PRODUCT + Routes.API_ID, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.PRODUCT_ID, method = RequestMethod.GET)
     public JResponseEntity<Object> findProductById(@PathVariable(value = "id") long id) {
-        Product product = productService.findById(id);
-        responseEntity = ResponseFactory.build();
-        if (product != null){
+        if (id > 0) {
+            Product product = productService.findById(id);
+            responseEntity = ResponseFactory.build();
             responseEntity.addBody(product);
             responseEntity.setStatus(HttpStatus.OK);
             responseEntity.setMessage("SUCCESS");
-        } else {
+        }else {
             responseEntity.setStatus(HttpStatus.NOT_FOUND);
             responseEntity.setMessage("FAILED");
         }
         return responseEntity;
     }
 
+    @RequestMapping(value = Routes.PRODUCT, method = RequestMethod.POST)
     public JResponseEntity<Object> saveProducts(Product product) {
         if (product != null){
             productService.saveOrUpdate(product);
+            responseEntity = ResponseFactory.build();
+            responseEntity.addBody(product);
+            responseEntity.setStatus(HttpStatus.OK);
+            responseEntity.setMessage("SUCCESS");
+        }else {
+            responseEntity.setStatus(HttpStatus.NOT_FOUND);
+            responseEntity.setMessage("FAILED");
         }
-        if (productService.saveOrUpdate(product) != null){
-
-        }
+        return responseEntity;
     }
+
+    @RequestMapping(value = Routes.PRODUCT_ID, method = RequestMethod.DELETE)
+    public JResponseEntity<Object> deleteProduct(@PathVariable(value = "id") long id){
+        if (id > 0){
+            productService.delete(id);
+            responseEntity = ResponseFactory.build();
+            responseEntity.addBody(id);
+            responseEntity.setStatus(HttpStatus.OK);
+            responseEntity.setMessage("DELETED");
+        }else {
+            responseEntity.setMessage("DELETE FAILED");
+            responseEntity.setStatus(HttpStatus.NO_CONTENT);
+        }
+        return responseEntity;
+    }
+
 }

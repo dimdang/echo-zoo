@@ -1,6 +1,6 @@
 package org.cool.zoo.controller;
 
-import org.cool.zoo.entities.core.User;
+import org.cool.zoo.entities.users.User;
 import org.cool.zoo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 

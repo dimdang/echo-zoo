@@ -1,6 +1,6 @@
 package org.cool.zoo.service;
 
-import org.cool.zoo.entities.core.User;
+import org.cool.zoo.entities.users.User;
 import org.cool.zoo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

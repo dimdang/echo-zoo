@@ -19,5 +19,8 @@ public class Routes {
     public static final String ADMIN = "/admin";
     public static final String CLIENT = "/client";
     public static final String PRODUCT = "/product";
+    public static final String PRODUCT_ID = "/product/{id}";
+    public static final String SECURE = "/secure";
+    public static final String SECURE_USER = "/secure/user";
 
 }

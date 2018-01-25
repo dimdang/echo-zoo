@@ -1,4 +1,4 @@
-package org.cool.zoo.entities.core;
+package org.cool.zoo.entities.users;
 
 import org.hibernate.validator.constraints.Email;
 
