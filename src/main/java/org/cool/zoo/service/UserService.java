@@ -30,7 +30,7 @@ public class UserService implements BaseServiceUtil<User> {
 
     @Override
     public User saveOrUpdate(User entity) {
-        return null;
+        return userRepository.save(entity);
     }
 
     @Override
