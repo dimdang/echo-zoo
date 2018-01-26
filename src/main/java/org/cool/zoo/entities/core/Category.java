@@ -10,28 +10,30 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "tbl_category")
-public class Category extends AbstractEntity{
+public class Category {
 
+    private Long id;
     private String categoryName;
+    private String categoryDesc;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "cat_id")
-    @Override
     public Long getId() {
         return this.id;
     }
 
-    @Override
-    @Column(name = "cat_code")
-    public String getCode() {
-        return this.getCode();
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    @Override
-    @Column(name = "cat_des")
-    public String getDesc() {
-        return this.getDesc();
+    @Column(name = "cat_desc")
+    public String getCategoryDesc() {
+        return categoryDesc;
+    }
+
+    public void setCategoryDesc(String categoryDesc) {
+        this.categoryDesc = categoryDesc;
     }
 
     @Column(name = "cat_name")

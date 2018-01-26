@@ -4,32 +4,44 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="tbl_product")
-public class Product extends AbstractEntity {
+public class Product {
 
+    private Long id;
     private String productName;
+    private String productCode;
+    private String productDesc;
     private Category category;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "pro_id")
-    @Override
     public Long getId() {
         return id;
     }
 
-    @Override
-    @Column(name = "pro_code")
-    public String getCode() {
-        return code;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    @Override
-    @Column(name = "pro_des")
-    public String getDesc() {
-        return desc;
+    @Column(name = "pro_code", nullable = false)
+    public String getProductCode() {
+        return productCode;
     }
 
-    @Column(name = "pro_name")
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+
+    @Column(name = "pro_dec")
+    public String getProductDesc() {
+        return productDesc;
+    }
+
+    public void setProductDesc(String productDesc) {
+        this.productDesc = productDesc;
+    }
+
+    @Column(name = "pro_name", nullable = false)
     public String getProductName() {
         return productName;
     }

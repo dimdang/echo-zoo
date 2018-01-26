@@ -22,5 +22,8 @@ public class Routes {
     public static final String PRODUCT_ID = "/product/{id}";
     public static final String SECURE = "/secure";
     public static final String SECURE_USER = "/secure/user";
+    public static final String PRODUCT_CATEGORY = "/product/category";
+    public static final String PRODUCT_CATEGORY_NAME = "/product/category/mane";
+    public static final String PRODUCT_CATEGORY_ID = "/product/category/{id}";
 
 }

@@ -1,10 +1,13 @@
 package org.cool.zoo.service;
 
+import org.cool.zoo.entities.core.Category;
 import org.cool.zoo.entities.core.Product;
 import org.cool.zoo.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -16,11 +19,11 @@ import java.io.Serializable;
  */
 
 @Service
-public class ProductService implements BaseServiceUtil<Product> {
+public class ProductService implements BaseServiceUtil<Product>{
 
 
     @Autowired
-    private  ProductRepository  productRepository;
+    private ProductRepository productRepository;
 
     @Override
     public Page<Product> findAll(Pageable pageable) {
@@ -41,4 +44,7 @@ public class ProductService implements BaseServiceUtil<Product> {
     public void delete(Long id) {
         productRepository.delete(id);
     }
+
+
+
 }
