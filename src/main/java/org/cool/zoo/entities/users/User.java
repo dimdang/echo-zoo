@@ -35,6 +35,14 @@ public class User {
     @Column(name = "activated", nullable = true)
     private boolean activated;
 
+    @Size(min = 0, max = 500)
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Size(min = 0, max = 500)
+    @Column(name = "last_name")
+    private String lastName;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "table_user_role", joinColumns = {
             @JoinColumn(name = "user_id", nullable = false, updatable = true)},
@@ -56,6 +64,22 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPassword() {
@@ -110,10 +134,13 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "username='" + username + '\'' +
+                "id=" + id +
+                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", activated='" + activated + '\'' +
+                ", activated=" + activated +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", authorities=" + authorities +
                 '}';
     }

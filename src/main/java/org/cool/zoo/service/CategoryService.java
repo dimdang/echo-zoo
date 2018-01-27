@@ -25,7 +25,7 @@ public class CategoryService implements BaseServiceUtil<Category> {
     }
 
     @Override
-    public Category findById(Long id) {
+    public Category  findById(Long id) {
         return category.findOne(id);
     }
 

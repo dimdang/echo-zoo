@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * Email    : d.dim@gl-f.com
  */
 @Service
-public class UserService implements BaseServiceUtil<User> {
+public class SecUserService implements BaseServiceUtil<User> {
 
     @Autowired
     private UserRepository userRepository;
@@ -35,6 +35,6 @@ public class UserService implements BaseServiceUtil<User> {
 
     @Override
     public void delete(Long id) {
-
+        userRepository.delete(id);
     }
 }

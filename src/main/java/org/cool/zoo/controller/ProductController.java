@@ -70,7 +70,7 @@ public class ProductController {
         } else {
             return ResponseFactory.build("NO PRODUCT TO ADD", HttpStatus.NOT_FOUND);
         }
-        return null;
+        return ResponseFactory.build("SOME THING WENT WRONG PLEASE CONTRACT BUCKY DEV", HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = Routes.PRODUCT_ID, method = RequestMethod.DELETE)

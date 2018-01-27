@@ -30,9 +30,9 @@ public class CategoryController {
     public JResponseEntity<Object> saveCategory(Category category) {
         if (category != null) {
             categoryService.saveOrUpdate(category);
-            return ResponseFactory.build("CATEGORY SAVED", HttpStatus.OK, category);
+            return ResponseFactory.build("CATEGORY CREATED", HttpStatus.OK, category);
         } else {
-            return ResponseFactory.build("CATEGORY SAVED FAIL", HttpStatus.NOT_FOUND);
+            return ResponseFactory.build("MAKE SURE YOUR WANT TO CREATE", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -49,7 +49,7 @@ public class CategoryController {
     public JResponseEntity<Object> getAllCategory(){
         Page<Category> categories = categoryService.findAll(new PageRequest(0, 10));
         if (categories != null){
-            return ResponseFactory.build("SUCCESS", HttpStatus.OK, categories);
+            return ResponseFactory.build("ALL CATEGORY FOUNDED", HttpStatus.OK, categories);
         }else
             return ResponseFactory.build("NOT FOUND", HttpStatus.NOT_FOUND);
     }
