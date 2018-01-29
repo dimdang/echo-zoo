@@ -23,7 +23,7 @@ import java.util.Collection;
  */
 
 @Service("userDetailsService")
-public class UserService  implements UserDetailsService {
+public class SecUserServiceLogin implements UserDetailsService {
 
     private final Logger log = LoggerFactory.getLogger(UserDetailsService.class);
 

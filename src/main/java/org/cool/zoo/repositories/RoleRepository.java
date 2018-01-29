@@ -7,6 +7,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by Dang Dim
  * Date     : 27-Jan-18, 11:37 AM
@@ -16,6 +18,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoleRepository extends PagingAndSortingRepository<Role, Long> {
 
-    Page<Role> findRoleByName(@Param("roleName") String name, Pageable pageable);
+    List<Role> findRoleByName(@Param("roleName") String name);
 
 }

@@ -6,6 +6,7 @@ import org.cool.zoo.entities.users.Role;
 import org.cool.zoo.entities.users.User;
 import org.cool.zoo.repositories.RoleRepository;
 import org.cool.zoo.repositories.UserRepository;
+import org.cool.zoo.security.UserAlreadyRegisterException;
 import org.cool.zoo.service.RoleService;
 import org.cool.zoo.service.SecUserService;
 import org.cool.zoo.util.ResponseFactory;
@@ -13,10 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by Dang Dim
@@ -40,6 +45,21 @@ public class SecUsersController {
     UserRepository userRepository;
 
     @RequestMapping(value = Routes.SECURE_USER, method = RequestMethod.GET)
+    public JResponseEntity<Object> findByEmail(@PathVariable(value = "email") String email) {
+        if (email != null){
+            User usersFromEmail = userRepository.findByEmail(email);
+            if (usersFromEmail != null){
+                return ResponseFactory.build("SUCCESS", HttpStatus.OK, usersFromEmail);
+            }else {
+                return ResponseFactory.build("USERS NOT FOUND", HttpStatus.NO_CONTENT);
+            }
+        }else {
+            return ResponseFactory.build("Please make sure you what do you want", HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @RequestMapping(value = Routes.SECURE_USER, method = RequestMethod.GET)
     public JResponseEntity<Object> allUsers() {
         Page<User> allUser = secUserService.findAll(new PageRequest(0, 10));
         if (allUser != null) {
@@ -59,35 +79,19 @@ public class SecUsersController {
 
     @RequestMapping(value = Routes.SECURE_USER, method = RequestMethod.POST)
     public JResponseEntity<Object> createUser(User user) {
-        User loadUserLogin = userRepository.findByUsername(user.getUsername());
-        if (loadUserLogin != null) {
-            Role roles = roleService.findById(user.getAuthorities());
-            if (roles != null) {
+        if (user != null && user.getUsername() != null) {
+            User loadUserLogin = userRepository.findByUsername(user.getUsername());
+            if (loadUserLogin != null) {
+                return ResponseFactory.build("User already exist", HttpStatus.CREATED, user.getUsername());
+            }else {
+                secUserService.saveOrUpdate(user);
+                return ResponseFactory.build("SOME THING WENT WRONG PLEASE CONTRACT BUCKY DEV", HttpStatus.NOT_FOUND);
             }
-
-        } else {
-            return ResponseFactory.build("NO PRODUCT TO ADD", HttpStatus.NOT_FOUND);
         }
-        return ResponseFactory.build("SOME THING WENT WRONG PLEASE CONTRACT BUCKY DEV", HttpStatus.NOT_FOUND);
-    }
-
-    @RequestMapping(value = Routes.PRODUCT_ID, method = RequestMethod.DELETE)
-    public JResponseEntity<Object> deleteProduct(@PathVariable(value = "id") long id) {
-        if (id > 0) {
-            productService.delete(id);
-            return ResponseFactory.build("DELETED SUCCESS", HttpStatus.OK);
-        } else
-            return ResponseFactory.build("DELETED FAILED", HttpStatus.NOT_FOUND);
+        return null;
     }
 
 
-    @RequestMapping(value = Routes.PRODUCT_CATEGORY_NAME, method = RequestMethod.GET)
-    public JResponseEntity<Object> findProductByCategory(@RequestParam("id") Long id) {
-        Page<Product> productCategory = productRepository.findProductByCategory_Id(id, new PageRequest(0,10));
-        if (productCategory != null){
-            return ResponseFactory.build("OK", HttpStatus.OK, productCategory);
-        }else
-            return ResponseFactory.build("FAILED", HttpStatus.NOT_FOUND);
-    }
+
 
 }

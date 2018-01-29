@@ -5,6 +5,7 @@ import org.cool.zoo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +13,12 @@ import org.springframework.stereotype.Service;
  * Date     : 18-Jan-18, 2:05 PM
  * Email    : d.dim@gl-f.com
  */
+
 @Service
 public class SecUserService implements BaseServiceUtil<User> {
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -29,12 +34,15 @@ public class SecUserService implements BaseServiceUtil<User> {
     }
 
     @Override
-    public User saveOrUpdate(User entity) {
-        return userRepository.save(entity);
+    public User saveOrUpdate(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     @Override
     public void delete(Long id) {
         userRepository.delete(id);
     }
+
+
 }
