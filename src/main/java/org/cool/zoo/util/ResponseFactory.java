@@ -27,13 +27,15 @@ public final class ResponseFactory {
         JResponseEntity<T> responseEntity = build();
         responseEntity.setMessage(message);
         responseEntity.setStatus(status);
-        responseEntity.addBody(body);
+        responseEntity.setData(body);
+//        responseEntity.addBody(body);
         return responseEntity;
     }
 
     public static <T> JResponseEntity<T> build(String message, HttpStatus status, String key, T body) {
         JResponseEntity<T> responseEntity = build(message, status);
-        responseEntity.addBody(key, body);
+//        responseEntity.addBody(key, body);
+        responseEntity.setData(body);
         return responseEntity;
     }
 }

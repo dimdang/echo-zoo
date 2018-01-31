@@ -44,8 +44,8 @@ public class SecUsersController {
     @Autowired
     UserRepository userRepository;
 
-    @RequestMapping(value = Routes.SECURE_USER, method = RequestMethod.GET)
-    public JResponseEntity<Object> findByEmail(@PathVariable(value = "email") String email) {
+    @RequestMapping(value = Routes.SECURE_USER_EMAIL, method = RequestMethod.GET)
+    public JResponseEntity<User> findByEmail(@PathVariable(value = "email") String email) {
         if (email != null){
             User usersFromEmail = userRepository.findByEmail(email);
             if (usersFromEmail != null){
@@ -60,7 +60,7 @@ public class SecUsersController {
     }
 
     @RequestMapping(value = Routes.SECURE_USER, method = RequestMethod.GET)
-    public JResponseEntity<Object> allUsers() {
+    public JResponseEntity<Page<User>> allUsers() {
         Page<User> allUser = secUserService.findAll(new PageRequest(0, 10));
         if (allUser != null) {
             return ResponseFactory.build("SUCCESS", HttpStatus.OK, allUser);
@@ -69,7 +69,7 @@ public class SecUsersController {
     }
 
     @RequestMapping(value = Routes.SECURE_USER_ID, method = RequestMethod.GET)
-    public JResponseEntity<Object> findUserById(@PathVariable(value = "id") long id) {
+    public JResponseEntity<User> findUserById(@PathVariable(value = "id") long id) {
         if (id > 0) {
             User oneUser = secUserService.findById(id);
             return ResponseFactory.build("SUCCESSFUL", HttpStatus.OK, oneUser);
@@ -85,13 +85,23 @@ public class SecUsersController {
                 return ResponseFactory.build("User already exist", HttpStatus.CREATED, user.getUsername());
             }else {
                 secUserService.saveOrUpdate(user);
-                return ResponseFactory.build("SOME THING WENT WRONG PLEASE CONTRACT BUCKY DEV", HttpStatus.NOT_FOUND);
+                return ResponseFactory.build("REGISTER SUCCESS", HttpStatus.NOT_FOUND);
             }
         }
-        return null;
+        return ResponseFactory.build("NOT ENOUGH DATA", HttpStatus.NOT_FOUND);
     }
 
-
-
+    @RequestMapping(value = Routes.SECURE_USER + Routes.ROLE_NAME, method = RequestMethod.GET)
+    public JResponseEntity<Page<User>> findUserRole(@PathVariable(value = "authorities") String authorities){
+        Role authority = roleRepository.findRoleByName(authorities);
+        Page<User> userInRole = null;
+        if (authority != null){
+            userInRole = userRepository.findAllByAuthoritiesEquals(authority, new PageRequest(0,10));
+        }
+        if (userInRole != null){
+            return ResponseFactory.build("SUCCESS", HttpStatus.OK, userInRole);
+        }else
+            return ResponseFactory.build("NO USER AVAILABLE", HttpStatus.NOT_FOUND);
+    }
 
 }

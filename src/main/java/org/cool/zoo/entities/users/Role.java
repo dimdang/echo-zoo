@@ -20,6 +20,7 @@ public class Role {
     @Column(name = "name", nullable = true)
     private String name;
 
+    private String description;
 
     public Integer getId() {
         return id;
@@ -35,6 +36,15 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column(name = "role_des")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

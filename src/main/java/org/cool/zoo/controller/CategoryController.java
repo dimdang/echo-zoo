@@ -27,7 +27,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @RequestMapping(value = Routes.PRODUCT_CATEGORY, method = RequestMethod.POST)
-    public JResponseEntity<Object> saveCategory(Category category) {
+    public JResponseEntity<Category> saveCategory(Category category) {
         if (category != null) {
             categoryService.saveOrUpdate(category);
             return ResponseFactory.build("CATEGORY CREATED", HttpStatus.OK, category);
@@ -37,7 +37,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = Routes.PRODUCT_CATEGORY_ID, method = RequestMethod.GET)
-    public JResponseEntity<Object> findCategoryById(@PathVariable(value = "id") Long id){
+    public JResponseEntity<Category> findCategoryById(@PathVariable(value = "id") Long id){
         if (id != null){
             Category category = categoryService.findById(id);
             return ResponseFactory.build("SUCCESS", HttpStatus.OK, category);
@@ -46,7 +46,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = Routes.PRODUCT_CATEGORY, method = RequestMethod.GET)
-    public JResponseEntity<Object> getAllCategory(){
+    public JResponseEntity<Page<Category>> getAllCategory(){
         Page<Category> categories = categoryService.findAll(new PageRequest(0, 10));
         if (categories != null){
             return ResponseFactory.build("ALL CATEGORY FOUNDED", HttpStatus.OK, categories);
@@ -55,7 +55,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = Routes.PRODUCT_CATEGORY_ID, method = RequestMethod.DELETE)
-    public JResponseEntity<Object> delete(@PathVariable(value = "id") Long id){
+    public JResponseEntity<Category> delete(@PathVariable(value = "id") Long id){
         if (id != null){
             return ResponseFactory.build("DELETED SUCCESSFUL", HttpStatus.OK);
         }else

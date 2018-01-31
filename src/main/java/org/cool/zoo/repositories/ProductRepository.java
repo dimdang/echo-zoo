@@ -18,5 +18,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends PagingAndSortingRepository<Product,Long>, JpaSpecificationExecutor<Category> {
 
-    Page<Product> findProductByCategory_Id(@Param(value = "category") Long id, Pageable page);
+    Page<Product> findAllByCategoryEquals(@Param(value = "category") Category category, Pageable page);
 }

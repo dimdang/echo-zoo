@@ -48,6 +48,7 @@ public class Oauth2Configuration {
         public void configure(HttpSecurity http) throws Exception {
 
             http
+
                     .exceptionHandling()
                     .authenticationEntryPoint(customAuthenticationEntryPoint)
                     .and()
@@ -60,6 +61,7 @@ public class Oauth2Configuration {
                     .disable()
                     .headers()
                     .frameOptions().disable()
+                    .and()
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
@@ -95,7 +97,6 @@ public class Oauth2Configuration {
         }
 
         @Autowired
-        @Qualifier("authenticationManagerBean")
         private AuthenticationManager authenticationManager;
 
         @Override

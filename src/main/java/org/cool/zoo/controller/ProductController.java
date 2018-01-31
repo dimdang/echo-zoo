@@ -5,6 +5,8 @@ import org.cool.zoo.configure.Routes;
 import org.cool.zoo.entities.core.Category;
 import org.cool.zoo.entities.core.Product;
 import org.cool.zoo.entities.response.JResponseEntity;
+import org.cool.zoo.entities.users.Role;
+import org.cool.zoo.repositories.CategoryRepository;
 import org.cool.zoo.repositories.ProductRepository;
 import org.cool.zoo.service.CategoryService;
 import org.cool.zoo.service.ProductService;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +42,15 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @RequestMapping(value = Routes.PRODUCT, method = RequestMethod.GET)
-    public JResponseEntity<Object> getProducts() {
-        Page<Product> products = productService.findAll(new PageRequest(0, 10));
+    public JResponseEntity<Page<Product>> getProducts(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size)
+    {
+        Page<Product> products = productService.findAll(new PageRequest(page, size));
         if (products != null) {
             return ResponseFactory.build("SUCCESS", HttpStatus.OK, products);
         } else
@@ -49,7 +58,7 @@ public class ProductController {
     }
 
     @RequestMapping(value = Routes.PRODUCT_ID, method = RequestMethod.GET)
-    public JResponseEntity<Object> findProductById(@PathVariable(value = "id") long id) {
+    public JResponseEntity<Product> findProductById(@PathVariable(value = "id") long id) {
         if (id > 0) {
             Product product = productService.findById(id);
             return ResponseFactory.build("SUCCESSFUL", HttpStatus.OK, product);
@@ -58,7 +67,7 @@ public class ProductController {
     }
 
     @RequestMapping(value = Routes.PRODUCT, method = RequestMethod.POST)
-    public JResponseEntity<Object> saveProducts(Product product) {
+    public JResponseEntity<Product> saveProducts(Product product) {
         if (product != null) {
             Category category = categoryService.findById(product.getCategory().getId());
             if (category != null) {
@@ -74,7 +83,7 @@ public class ProductController {
     }
 
     @RequestMapping(value = Routes.PRODUCT_ID, method = RequestMethod.DELETE)
-    public JResponseEntity<Object> deleteProduct(@PathVariable(value = "id") long id) {
+    public JResponseEntity<Product> deleteProduct(@PathVariable(value = "id") long id) {
         if (id > 0) {
             productService.delete(id);
             return ResponseFactory.build("DELETED SUCCESS", HttpStatus.OK);
@@ -84,12 +93,19 @@ public class ProductController {
 
 
     @RequestMapping(value = Routes.PRODUCT_CATEGORY_NAME, method = RequestMethod.GET)
-    public JResponseEntity<Object> findProductByCategory(@RequestParam("id") Long id) {
-        Page<Product> productCategory = productRepository.findProductByCategory_Id(id, new PageRequest(0,10));
-        if (productCategory != null){
-            return ResponseFactory.build("OK", HttpStatus.OK, productCategory);
-        }else
-            return ResponseFactory.build("FAILED", HttpStatus.NOT_FOUND);
+    public JResponseEntity<Page<Product>> findProductsByCategory(
+            @RequestParam("category") String name,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size
+    ) {
+        Category category = categoryRepository.findByCategoryName(name);
+        Page<Product> products = null;
+        if (category != null){
+            products = productRepository.findAllByCategoryEquals(category, new PageRequest(page, size));
+            return ResponseFactory.build("PRODUCTS FOUND", HttpStatus.OK, products);
+        }else {
+            return ResponseFactory.build("PRODUCT NOT AVAILABLE", HttpStatus.OK);
+        }
     }
 
 }
