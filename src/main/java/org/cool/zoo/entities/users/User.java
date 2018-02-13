@@ -1,5 +1,6 @@
 package org.cool.zoo.entities.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -26,6 +27,7 @@ public class User {
 
     @Size(min = 0, max = 500)
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
 
     @Email

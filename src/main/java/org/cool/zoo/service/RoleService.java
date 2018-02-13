@@ -7,6 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Created by Dang Dim
  * Date     : 27-Jan-18, 11:58 AM
@@ -37,5 +40,9 @@ public class RoleService implements BaseServiceUtil<Role> {
     @Override
     public void delete(Long id) {
         roleRepository.delete(id);
+    }
+
+    public List<Role> findAll() {
+        return (List<Role>) roleRepository.findAll();
     }
 }

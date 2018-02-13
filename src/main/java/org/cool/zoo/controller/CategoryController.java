@@ -21,12 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
+@RequestMapping(Routes.CATEGORY)
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
-    @RequestMapping(value = Routes.PRODUCT_CATEGORY, method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public JResponseEntity<Category> saveCategory(Category category) {
         if (category != null) {
             categoryService.saveOrUpdate(category);
@@ -36,7 +37,7 @@ public class CategoryController {
         }
     }
 
-    @RequestMapping(value = Routes.PRODUCT_CATEGORY_ID, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.ID, method = RequestMethod.GET)
     public JResponseEntity<Category> findCategoryById(@PathVariable(value = "id") Long id){
         if (id != null){
             Category category = categoryService.findById(id);
@@ -45,7 +46,7 @@ public class CategoryController {
             return ResponseFactory.build("FAILED", HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = Routes.PRODUCT_CATEGORY, method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public JResponseEntity<Page<Category>> getAllCategory(){
         Page<Category> categories = categoryService.findAll(new PageRequest(0, 10));
         if (categories != null){
@@ -54,12 +55,21 @@ public class CategoryController {
             return ResponseFactory.build("NOT FOUND", HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = Routes.PRODUCT_CATEGORY_ID, method = RequestMethod.DELETE)
+    @RequestMapping(value = Routes.ID, method = RequestMethod.DELETE)
     public JResponseEntity<Category> delete(@PathVariable(value = "id") Long id){
         if (id != null){
             return ResponseFactory.build("DELETED SUCCESSFUL", HttpStatus.OK);
         }else
             return ResponseFactory.build("DELETE FAILED", HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public JResponseEntity<Object> updateProduct(Category category) {
+        if ( category != null && category.getId() > 0) {
+            categoryService.saveOrUpdate(category);
+            return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
+        }
+        return ResponseFactory.build("Please specify category you want to update..!", HttpStatus.NOT_FOUND);
     }
 
 }

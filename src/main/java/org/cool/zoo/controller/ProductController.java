@@ -6,6 +6,7 @@ import org.cool.zoo.entities.core.Category;
 import org.cool.zoo.entities.core.Product;
 import org.cool.zoo.entities.response.JResponseEntity;
 import org.cool.zoo.entities.users.Role;
+import org.cool.zoo.entities.users.User;
 import org.cool.zoo.repositories.CategoryRepository;
 import org.cool.zoo.repositories.ProductRepository;
 import org.cool.zoo.service.CategoryService;
@@ -31,6 +32,7 @@ import java.util.Map;
  */
 
 @RestController
+@RequestMapping(Routes.PRODUCT)
 public class ProductController {
 
     @Autowired
@@ -45,7 +47,7 @@ public class ProductController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @RequestMapping(value = Routes.PRODUCT, method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public JResponseEntity<Page<Product>> getProducts(
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "size", defaultValue = "10", required = false) int size)
@@ -57,7 +59,7 @@ public class ProductController {
             return ResponseFactory.build("FAILED", HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = Routes.PRODUCT_ID, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.ID, method = RequestMethod.GET)
     public JResponseEntity<Product> findProductById(@PathVariable(value = "id") long id) {
         if (id > 0) {
             Product product = productService.findById(id);
@@ -66,7 +68,7 @@ public class ProductController {
             return ResponseFactory.build("FAILED", HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = Routes.PRODUCT, method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public JResponseEntity<Product> saveProducts(Product product) {
         if (product != null) {
             Category category = categoryService.findById(product.getCategory().getId());
@@ -82,7 +84,7 @@ public class ProductController {
         return ResponseFactory.build("SOME THING WENT WRONG PLEASE CONTRACT BUCKY DEV", HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = Routes.PRODUCT_ID, method = RequestMethod.DELETE)
+    @RequestMapping(value = Routes.ID, method = RequestMethod.DELETE)
     public JResponseEntity<Product> deleteProduct(@PathVariable(value = "id") long id) {
         if (id > 0) {
             productService.delete(id);
@@ -92,7 +94,7 @@ public class ProductController {
     }
 
 
-    @RequestMapping(value = Routes.PRODUCT_CATEGORY_NAME, method = RequestMethod.GET)
+    @RequestMapping(value =Routes.CATEGORY + Routes.NAME, method = RequestMethod.GET)
     public JResponseEntity<Page<Product>> findProductsByCategory(
             @RequestParam("category") String name,
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
@@ -106,6 +108,15 @@ public class ProductController {
         }else {
             return ResponseFactory.build("PRODUCT NOT AVAILABLE", HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public JResponseEntity<Object> updateProduct(Product product) {
+        if ( product != null && product.getId() > 0) {
+            productService.saveOrUpdate(product);
+            return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
+        }
+        return ResponseFactory.build("Please specify product you want to update..!", HttpStatus.NOT_FOUND);
     }
 
 }

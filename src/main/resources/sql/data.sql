@@ -7,6 +7,7 @@ INSERT INTO table_user_role (user_id,role_id) VALUES (1,1);
 
 INSERT INTO table_user_role (user_id,role_id) VALUES (1,2);
 
-INSERT INTO table_product (name) VALUES ('Mac');
+/*INSERT INTO table_product (name) VALUES ('Mac');
 INSERT INTO table_product (name) VALUES ('DEll');
-INSERT INTO table_product (name) VALUES ('Hp');
+INSERT INTO table_product (name) VALUES ('Hp');*/
+
