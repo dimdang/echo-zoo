@@ -21,10 +21,10 @@ public final class JResponseEntity<T> {
 
     @JsonProperty("DATA")
     private T data;
-//    private final List<T> data = new ArrayList();
+    //private final List<T> data = new ArrayList();
 
-    @JsonProperty("MAP")
-    private final Map<String, T> map = new HashMap();
+    /*@JsonProperty("MAP")
+    private final Map<String, T> map = new HashMap();*/
 
     public JResponseEntity() {
     }
@@ -69,9 +69,9 @@ public final class JResponseEntity<T> {
         this.data = data;
     }
 
-    public Map<String, T> getMap() {
+/*    public Map<String, T> getMap() {
         return map;
-    }
+    }*/
 
 //    public void addBody(T body) {
 //        if (body != null) {

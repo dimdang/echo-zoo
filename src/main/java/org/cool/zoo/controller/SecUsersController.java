@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -31,16 +32,19 @@ import java.util.*;
 public class SecUsersController {
 
     @Autowired
-    SecUserService secUserService;
+    private SecUserService secUserService;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    RoleService roleService;
+    private RoleService roleService;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @RequestMapping(value = Routes.EMAIL, method = RequestMethod.GET)
     public JResponseEntity<User> findByEmail(@PathVariable(value = "email") String email) {
@@ -108,29 +112,34 @@ public class SecUsersController {
             return ResponseFactory.build("NO USER AVAILABLE", HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public JResponseEntity<Object> updateUser(User user, List<Role> roles) {
+    @RequestMapping(value = Routes.ID, method = RequestMethod.PUT)
+    public JResponseEntity<Object> updateUser(User user) {
         if (user != null && user.getId() != null && user.getUsername() != null) {
             User loadUserLogin = userRepository.findByUsername(user.getUsername());
             if (loadUserLogin != null) {
                 return ResponseFactory.build("Update fail, user already exist", HttpStatus.CREATED, user.getUsername());
             } else {
-
-                secUserService.saveOrUpdate(user);
-                return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
+                String pwd = userRepository.existsByPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+                if (pwd != null){
+                    secUserService.saveOrUpdate(user);
+                    return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
+                }else {
+                    return ResponseFactory.build("Password is not match.. !", HttpStatus.NOT_FOUND);
+                }
             }
         }
         return ResponseFactory.build("Please specify user you want to update..!", HttpStatus.NOT_FOUND);
     }
 
-    public User assignAuthorities(User user, List<Role> roles) {
+    @RequestMapping(value = Routes.ROLE + Routes.ID, method = RequestMethod.PUT)
+    public JResponseEntity<User> assignRolesToUsers(User user, List<Role> roles) {
+        User upgradeUser = null;
         if (user != null && !roles.isEmpty()) {
-            Set<Role> roleSet = new HashSet<>();
-            roleSet.addAll(roles);
-            user.setAuthorities(roleSet);
-            secUserService.saveOrUpdate(user);
+            upgradeUser = secUserService.assignAuthorities(user, roles);
+            return ResponseFactory.build("User is already assign role", HttpStatus.OK, upgradeUser);
+        } else {
+            return ResponseFactory.build("Role is not specify", HttpStatus.OK);
         }
-        return user;
     }
 
 }
