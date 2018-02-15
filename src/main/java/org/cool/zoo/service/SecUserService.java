@@ -59,4 +59,12 @@ public class SecUserService implements BaseServiceUtil<User> {
         }
         return user;
     }
+
+    public boolean validatePassword(String pwd){
+        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+        if (pwd.matches(pattern))
+            return true;
+        return false;
+    }
+
 }

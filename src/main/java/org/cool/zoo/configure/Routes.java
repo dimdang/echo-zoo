@@ -22,4 +22,5 @@ public class Routes {
 
     public static final String ROLE = "/role";
 
+    public static final String PASSWORDS ="/passwords" ;
 }

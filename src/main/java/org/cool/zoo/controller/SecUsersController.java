@@ -38,9 +38,6 @@ public class SecUsersController {
     private RoleRepository roleRepository;
 
     @Autowired
-    private RoleService roleService;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -120,15 +117,31 @@ public class SecUsersController {
                 return ResponseFactory.build("Update fail, user already exist", HttpStatus.CREATED, user.getUsername());
             } else {
                 String pwd = userRepository.existsByPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-                if (pwd != null){
+                if (pwd != null) {
                     secUserService.saveOrUpdate(user);
                     return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
-                }else {
+                } else {
                     return ResponseFactory.build("Password is not match.. !", HttpStatus.NOT_FOUND);
                 }
             }
         }
         return ResponseFactory.build("Please specify user you want to update..!", HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(value = Routes.PASSWORDS + Routes.ID, method = RequestMethod.PUT)
+    public JResponseEntity<User> resetPasswords(User user) {
+        if (user != null && user.getPassword() != null) {
+            String pwd = userRepository.existsByPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            if (pwd != null){
+                return ResponseFactory.build("Please choose different from a previous..!");
+            }else {
+                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+                secUserService.saveOrUpdate(user);
+                return ResponseFactory.build("Your password already changed.!");
+            }
+        }else {
+            return ResponseFactory.build("Please enter your new passwords...!");
+        }
     }
 
     @RequestMapping(value = Routes.ROLE + Routes.ID, method = RequestMethod.PUT)
