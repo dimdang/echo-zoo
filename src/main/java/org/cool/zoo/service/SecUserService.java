@@ -5,6 +5,7 @@ import org.cool.zoo.entities.users.User;
 import org.cool.zoo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,4 +68,19 @@ public class SecUserService implements BaseServiceUtil<User> {
         return false;
     }
 
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Page<User> findAllByAuthoritiesEquals(Role authority, PageRequest pageRequest) {
+        return userRepository.findAllByAuthoritiesEquals(authority, pageRequest);
+    }
+
+    public String existsByPassword(String encode) {
+        return userRepository.existsByPassword(bCryptPasswordEncoder.encode(encode));
+    }
 }

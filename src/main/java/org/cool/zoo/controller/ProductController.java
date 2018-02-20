@@ -41,12 +41,6 @@ public class ProductController {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
     @RequestMapping(method = RequestMethod.GET)
     public JResponseEntity<Page<Product>> getProducts(
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
@@ -75,13 +69,13 @@ public class ProductController {
             if (category != null) {
                 product.setCategory(category);
                 productService.saveOrUpdate(product);
-                return ResponseFactory.build("PRODUCT ADDED SUCCESSFUL", HttpStatus.OK, product);
+                return ResponseFactory.build("PRODUCT ADDED", HttpStatus.OK, product);
             }
 
         } else {
             return ResponseFactory.build("NO PRODUCT TO ADD", HttpStatus.NOT_FOUND);
         }
-        return ResponseFactory.build("SOME THING WENT WRONG PLEASE CONTRACT BUCKY DEV", HttpStatus.NOT_FOUND);
+        return ResponseFactory.build("SOME THING WENT WRONG", HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = Routes.ID, method = RequestMethod.DELETE)
@@ -100,23 +94,24 @@ public class ProductController {
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "size", defaultValue = "10", required = false) int size
     ) {
-        Category category = categoryRepository.findByCategoryName(name);
+        Category category = categoryService.findByCategoryName(name);
         Page<Product> products = null;
         if (category != null){
-            products = productRepository.findAllByCategoryEquals(category, new PageRequest(page, size));
+            products = productService.findAllByCategoryEquals(category, new PageRequest(page, size));
             return ResponseFactory.build("PRODUCTS FOUND", HttpStatus.OK, products);
         }else {
             return ResponseFactory.build("PRODUCT NOT AVAILABLE", HttpStatus.OK);
         }
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public JResponseEntity<Object> updateProduct(Product product) {
-        if ( product != null && product.getId() > 0) {
-            productService.saveOrUpdate(product);
-            return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
+    @RequestMapping(value = Routes.ID, method = RequestMethod.PUT)
+    public JResponseEntity<Object> updateProduct(@RequestBody Product product, Long id) {
+        Product exist = productService.findById(id);
+        if (exist == null) {
+            return ResponseFactory.build("Please specify product you want to update..!", HttpStatus.NOT_FOUND);
         }
-        return ResponseFactory.build("Please specify product you want to update..!", HttpStatus.NOT_FOUND);
+        productService.saveOrUpdate(product);
+        return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
     }
 
 }

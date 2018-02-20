@@ -23,6 +23,15 @@ public class Product {
         this.id = id;
     }
 
+    @Column(name = "pro_name", nullable = false)
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
     @Column(name = "pro_code", nullable = false)
     public String getProductCode() {
         return productCode;
@@ -39,15 +48,6 @@ public class Product {
 
     public void setProductDesc(String productDesc) {
         this.productDesc = productDesc;
-    }
-
-    @Column(name = "pro_name", nullable = false)
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
     }
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

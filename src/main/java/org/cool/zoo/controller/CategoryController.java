@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Dang Dim
@@ -38,38 +35,44 @@ public class CategoryController {
     }
 
     @RequestMapping(value = Routes.ID, method = RequestMethod.GET)
-    public JResponseEntity<Category> findCategoryById(@PathVariable(value = "id") Long id){
-        if (id != null){
-            Category category = categoryService.findById(id);
+    public JResponseEntity<Category> findCategoryById(@PathVariable(value = "id") Long id) {
+        Category category = categoryService.findById(id);
+        if (category != null) {
             return ResponseFactory.build("SUCCESS", HttpStatus.OK, category);
-        }else
+        } else
             return ResponseFactory.build("FAILED", HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public JResponseEntity<Page<Category>> getAllCategory(){
-        Page<Category> categories = categoryService.findAll(new PageRequest(0, 10));
-        if (categories != null){
+    public JResponseEntity<Page<Category>> getAllCategory(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
+        Page<Category> categories = categoryService.findAll(new PageRequest(page, size));
+        if (categories != null) {
             return ResponseFactory.build("ALL CATEGORY FOUNDED", HttpStatus.OK, categories);
-        }else
+        } else
             return ResponseFactory.build("NOT FOUND", HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = Routes.ID, method = RequestMethod.DELETE)
-    public JResponseEntity<Category> delete(@PathVariable(value = "id") Long id){
-        if (id != null){
+    public JResponseEntity<Category> delete(@PathVariable(value = "id") Long id) {
+        if (id != null) {
+            categoryService.delete(id);
             return ResponseFactory.build("DELETED SUCCESSFUL", HttpStatus.OK);
-        }else
+        } else
             return ResponseFactory.build("DELETE FAILED", HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public JResponseEntity<Object> updateProduct(Category category) {
-        if ( category != null && category.getId() > 0) {
-            categoryService.saveOrUpdate(category);
-            return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
-        }
-        return ResponseFactory.build("Please specify category you want to update..!", HttpStatus.NOT_FOUND);
+    @RequestMapping(value = Routes.ID, method = RequestMethod.PUT)
+    public JResponseEntity<Object> updateProduct(@RequestBody Category category, Long id) {
+        Category existCategory = categoryService.findById(id);
+        if (existCategory == null)
+            return ResponseFactory.build("Category not found", HttpStatus.NOT_FOUND);
+
+        category.setId(id);
+        categoryService.saveOrUpdate(category);
+        return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
+
     }
 
 }

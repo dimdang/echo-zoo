@@ -17,41 +17,18 @@ import java.util.Set;
 @Table(name = "table_user")
 public class User {
 
+    private Long id;
+    private String username;
+    private String password;
+    private String email;
+    private boolean activated;
+    private String firstName;
+    private String lastName;
+    private Set<Role> authorities;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
-
-    @Column(name = "username", nullable = false, length = 50)
-    private String username;
-
-    @Size(min = 0, max = 500)
-    @Column(name = "password", nullable = false)
-    @JsonIgnore
-    private String password;
-
-    @Email
-    @Column(name = "email", nullable = true, unique = true)
-    private String email;
-
-    @Column(name = "activated", nullable = true)
-    private boolean activated;
-
-    @Size(min = 0, max = 500)
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Size(min = 0, max = 500)
-    @Column(name = "last_name")
-    private String lastName;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "table_user_role", joinColumns = {
-            @JoinColumn(name = "user_id", nullable = false, updatable = true)},
-            inverseJoinColumns = {@JoinColumn(name = "role_id",
-                    nullable = false, updatable = true)})
-    private Set<Role> authorities;
-
     public Long getId() {
         return id;
     }
@@ -60,6 +37,7 @@ public class User {
         this.id = id;
     }
 
+    @Column(name = "username", nullable = false, length = 50, unique = true)
     public String getUsername() {
         return username;
     }
@@ -68,6 +46,8 @@ public class User {
         this.username = username;
     }
 
+    @Size(min = 0, max = 500)
+    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -76,6 +56,8 @@ public class User {
         this.firstName = firstName;
     }
 
+    @Size(min = 0, max = 500)
+    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
@@ -84,6 +66,9 @@ public class User {
         this.lastName = lastName;
     }
 
+    @Size(min = 0, max = 500)
+    @Column(name = "password", nullable = false)
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -92,6 +77,8 @@ public class User {
         this.password = password;
     }
 
+    @Email
+    @Column(name = "email", nullable = true, unique = true)
     public String getEmail() {
         return email;
     }
@@ -100,6 +87,7 @@ public class User {
         this.email = email;
     }
 
+    @Column(name = "activated", nullable = true)
     public boolean isActivated() {
         return activated;
     }
@@ -108,6 +96,11 @@ public class User {
         this.activated = activated;
     }
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "table_user_role", joinColumns = {
+            @JoinColumn(name = "user_id", nullable = false, updatable = true)},
+            inverseJoinColumns = {@JoinColumn(name = "role_id",
+                    nullable = false, updatable = true)})
     public Set<Role> getAuthorities() {
         return authorities;
     }

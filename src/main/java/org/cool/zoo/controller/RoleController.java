@@ -19,13 +19,10 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
     @RequestMapping(method = RequestMethod.POST)
     public JResponseEntity<Object> createRole(Role role) {
         if (role != null) {
-            if (roleRepository.findRoleByName(role.getName()) != null) {
+            if (roleService.findRoleByName(role.getName()) != null) {
                 return ResponseFactory.build("Role already exist", HttpStatus.CREATED, role.getName());
             }else {
                 roleService.saveOrUpdate(role);
@@ -37,18 +34,12 @@ public class RoleController {
     }
 
     @RequestMapping(value = Routes.NAME, method = RequestMethod.GET)
-    public JResponseEntity<Role> finRoleName(@PathVariable("role") String role){
-        Role rolename = null;
-        if (role != null){
-            rolename = roleRepository.findRoleByName(role);
-            if (rolename != null) {
-                return ResponseFactory.build("Success", HttpStatus.OK, rolename);
-            }else {
-                return ResponseFactory.build("Failed ", HttpStatus.NOT_FOUND);
-            }
-        }else {
+    public JResponseEntity<Role> finRoleName(@PathVariable String name){
+        Role roleName = roleService.findRoleByName(name);
+        if (roleName != null){
+            return ResponseFactory.build("Success", HttpStatus.OK, roleName);
+        }else
             return ResponseFactory.build("Failed ", HttpStatus.NOT_FOUND);
-        }
     }
 
     @RequestMapping(value = Routes.ID, method = RequestMethod.DELETE)
@@ -75,8 +66,8 @@ public class RoleController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public JResponseEntity<Object> updateProduct(Role role) {
+    @RequestMapping(value = Routes.ID, method = RequestMethod.PUT)
+    public JResponseEntity<Object> updateRole(Role role) {
         if ( role != null && role.getId() > 0) {
             roleService.saveOrUpdate(role);
             return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);

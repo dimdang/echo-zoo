@@ -45,4 +45,8 @@ public class RoleService implements BaseServiceUtil<Role> {
     public List<Role> findAll() {
         return (List<Role>) roleRepository.findAll();
     }
+
+    public Role findRoleByName(String name){
+        return roleRepository.findRoleByName(name);
+    }
 }

@@ -130,7 +130,7 @@ public class SwaggerConfig {
 
     private List<GrantType> grantTypes() {
 
-        GrantType grantType = new ResourceOwnerPasswordCredentialsGrant("http://localhost:9191/oauth/token");
+        GrantType grantType = new ResourceOwnerPasswordCredentialsGrant("http://localhost:9191/api/oauth/token");
 
         return newArrayList(grantType);
     }
@@ -175,7 +175,7 @@ public class SwaggerConfig {
     private List<SecurityScheme> apiKeys() {
         ArrayList<SecurityScheme> securitySchemes = new ArrayList<>();
         securitySchemes.add(security());
-        securitySchemes.add(new ApiKey("Authorization", "Authorization", "header"));
+        //securitySchemes.add(new ApiKey("Authorization", "Authorization", "header"));
         return securitySchemes;
     }
 

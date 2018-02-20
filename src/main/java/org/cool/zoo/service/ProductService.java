@@ -45,6 +45,7 @@ public class ProductService implements BaseServiceUtil<Product>{
         productRepository.delete(id);
     }
 
-
-
+    public Page<Product> findAllByCategoryEquals(@Param(value = "category") Category category, Pageable page) {
+        return productRepository.findAllByCategoryEquals(category, page);
+    }
 }

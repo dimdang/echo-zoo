@@ -20,5 +20,6 @@ public interface BaseServiceUtil<T> {
     T saveOrUpdate(T entity);
 
     void delete(Long id);
+
 }
 

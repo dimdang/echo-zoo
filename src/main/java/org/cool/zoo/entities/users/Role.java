@@ -12,16 +12,13 @@ import javax.persistence.*;
 @Table(name = "table_role")
 public class Role {
 
+    private Integer id;
+    private String name;
+    private String description;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
-
-    @Column(name = "name", nullable = true)
-    private String name;
-
-    private String description;
-
     public Integer getId() {
         return id;
     }
@@ -30,6 +27,7 @@ public class Role {
         this.id = id;
     }
 
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }

@@ -25,7 +25,7 @@ public class CategoryService implements BaseServiceUtil<Category> {
     }
 
     @Override
-    public Category  findById(Long id) {
+    public Category findById(Long id) {
         return category.findOne(id);
     }
 
@@ -37,5 +37,9 @@ public class CategoryService implements BaseServiceUtil<Category> {
     @Override
     public void delete(Long id) {
         category.delete(id);
+    }
+
+    public Category findByCategoryName(String name) {
+        return category.findByCategoryName(name);
     }
 }
