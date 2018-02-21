@@ -93,53 +93,49 @@ public class SecUsersController {
             return ResponseFactory.build("NO USER AVAILABLE", HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = Routes.ID, method = RequestMethod.PUT)
-    public JResponseEntity<Object> updateUser(User user) {
-        if (user != null && user.getId() != null && user.getUsername() != null) {
-            User loadUserLogin = secUserService.findByUsername(user.getUsername());
-            if (loadUserLogin != null) {
-                return ResponseFactory.build("Update fail, user already exist", HttpStatus.CREATED, user.getUsername());
-            } else {
-                String pwd = secUserService.existsByPassword(user.getPassword());
-                if (pwd != null) {
-                    secUserService.saveOrUpdate(user);
-                    return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
-                } else {
-                    return ResponseFactory.build("Password is not match.. !", HttpStatus.NOT_FOUND);
-                }
-            }
-        }
-        return ResponseFactory.build("Please specify user you want to update..!", HttpStatus.NOT_FOUND);
-    }
-
     @RequestMapping(value = Routes.PASSWORDS + Routes.ID, method = RequestMethod.PUT)
-    public JResponseEntity<User> resetPasswords(User user) {
-        if (user != null && user.getPassword() != null) {
+    public JResponseEntity<User> resetPasswords(@PathVariable(value = "id") Long id, User user) {
+        if (findUser(id) != null) {
             String pwd = secUserService.existsByPassword(user.getPassword());
             if (pwd != null) {
-                return ResponseFactory.build("Please choose different from a previous..!");
+                return ResponseFactory.build("It's your old passwords.");
             } else {
-                user.setPassword(user.getPassword());
                 secUserService.saveOrUpdate(user);
                 return ResponseFactory.build("Your password already changed.!");
             }
         } else {
-            return ResponseFactory.build("Please enter your new passwords...!");
+            return ResponseFactory.build("User Not Found", HttpStatus.NOT_FOUND);
         }
     }
 
-    @RequestMapping(value = Routes.ROLE + Routes.ID, method = RequestMethod.PUT)
-    public JResponseEntity<User> assignRolesToUsers(User user, Long id, List<Role> roles) {
-        User existUser = secUserService.findById(id);
-        List<Role> existRole = roleService.findAll();
-        if (existRole != null && !existRole.isEmpty()){
+    @RequestMapping(value = Routes.ID, method = RequestMethod.PUT)
+    public JResponseEntity<Object> updateUser(@PathVariable(value = "id") Long id, User user, List<Role> roles) {
+        if (findUser(id) != null) {
+            Set<Role> auth = new HashSet<>();
+            auth.addAll(roles);
             user.setId(id);
-            User upgradeUser = secUserService.assignAuthorities(user, roles);
-            return ResponseFactory.build("Granted", HttpStatus.OK, upgradeUser);
+            user.setAuthorities(auth);
+            secUserService.saveOrUpdate(user);
+            return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK, user);
+        } else
+            return ResponseFactory.build("UPDATE FAILED", HttpStatus.NOT_FOUND);
+
+    }
+
+    public JResponseEntity<User> deleteUser(@PathVariable(value = "id") Long id) {
+        if (findUser(id) == null)
+            return ResponseFactory.build("Delete Failed", HttpStatus.NOT_FOUND);
+
+        secUserService.delete(id);
+        return ResponseFactory.build("Deleted");
+    }
+
+    private User findUser(Long id) {
+        User exist = null;
+        if (id != null) {
+            exist = secUserService.findById(id);
         }
-
-        return ResponseFactory.build("Role is not specify", HttpStatus.OK);
-
+        return exist;
     }
 
 }
