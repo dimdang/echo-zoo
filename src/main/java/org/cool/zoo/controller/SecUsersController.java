@@ -3,6 +3,7 @@ package org.cool.zoo.controller;
 import org.cool.zoo.configure.Routes;
 import org.cool.zoo.entities.response.JResponseEntity;
 import org.cool.zoo.entities.users.Role;
+import org.cool.zoo.entities.users.RoleNames;
 import org.cool.zoo.entities.users.User;
 import org.cool.zoo.service.RoleService;
 import org.cool.zoo.service.SecUserService;
@@ -11,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by Dang Dim
@@ -68,10 +69,10 @@ public class SecUsersController {
         if (user != null && user.getUsername() != null) {
             User loadUserLogin = secUserService.findByUsername(user.getUsername());
             if (loadUserLogin != null) {
-                return ResponseFactory.build("User already exist", HttpStatus.CREATED, user.getUsername());
+                return ResponseFactory.build("User already exist", HttpStatus.FORBIDDEN, user.getUsername());
             } else {
                 secUserService.saveOrUpdate(user);
-                return ResponseFactory.build("REGISTER SUCCESS", HttpStatus.NOT_FOUND);
+                return ResponseFactory.build("REGISTER SUCCESS", HttpStatus.OK);
             }
         }
         return ResponseFactory.build("NOT ENOUGH DATA", HttpStatus.NOT_FOUND);
@@ -108,20 +109,29 @@ public class SecUsersController {
         }
     }
 
+
+
+
     @RequestMapping(value = Routes.ID, method = RequestMethod.PUT)
-    public JResponseEntity<Object> updateUser(@PathVariable(value = "id") Long id, User user, List<Role> roles) {
-        if (findUser(id) != null) {
-            Set<Role> auth = new HashSet<>();
-            auth.addAll(roles);
-            user.setId(id);
-            user.setAuthorities(auth);
+    public JResponseEntity<Object> updateUser(
+            @PathVariable(value = "id") Long id,
+            //@RequestParam(value = "roleNames1") String[] roleNames1,
+            @RequestBody RoleNames roleNames
+            ) {
+
+        User user = findUser(id);
+        List<Role> roles = roleService.findByNames(roleNames.getNames());
+
+        if (user != null && !roles.isEmpty()) {
+            user.setAuthorities(new HashSet<>(roles));
             secUserService.saveOrUpdate(user);
             return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK, user);
-        } else
+        } else {
             return ResponseFactory.build("UPDATE FAILED", HttpStatus.NOT_FOUND);
-
+        }
     }
 
+    @RequestMapping(value = Routes.ID, method = RequestMethod.DELETE)
     public JResponseEntity<User> deleteUser(@PathVariable(value = "id") Long id) {
         if (findUser(id) == null)
             return ResponseFactory.build("Delete Failed", HttpStatus.NOT_FOUND);
