@@ -109,13 +109,20 @@ public class SecUsersController {
         }
     }
 
-
-
-
     @RequestMapping(value = Routes.ID, method = RequestMethod.PUT)
-    public JResponseEntity<Object> updateUser(
+    public JResponseEntity<Object> updateUser(@RequestBody User user, Long id) {
+        User exist = secUserService.findById(id);
+        if ( exist == null) {
+            return ResponseFactory.build("UPDATE Failed", HttpStatus.NOT_FOUND);
+        }
+        secUserService.saveOrUpdate(user);
+        return ResponseFactory.build("SUCCESS", HttpStatus.OK, user);
+    }
+
+
+    @RequestMapping(value = "assign" + Routes.ID, method = RequestMethod.PUT)
+    public JResponseEntity<Object> assignAuthorities(
             @PathVariable(value = "id") Long id,
-            //@RequestParam(value = "roleNames1") String[] roleNames1,
             @RequestBody RoleNames roleNames
             ) {
 

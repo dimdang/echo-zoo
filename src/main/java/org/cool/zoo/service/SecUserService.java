@@ -51,16 +51,6 @@ public class SecUserService implements BaseServiceUtil<User> {
         userRepository.delete(id);
     }
 
-    public User assignAuthorities(User user, List<Role> roles) {
-        if (user != null && !roles.isEmpty()) {
-            Set<Role> roleSet = new HashSet<>();
-            roleSet.addAll(roles);
-            user.setAuthorities(roleSet);
-            this.saveOrUpdate(user);
-        }
-        return user;
-    }
-
     public boolean validatePassword(String pwd){
         String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
         if (pwd.matches(pattern))

@@ -1,6 +1,7 @@
 package org.cool.zoo.controller;
 
 import org.cool.zoo.configure.Routes;
+import org.cool.zoo.entities.core.Product;
 import org.cool.zoo.entities.response.JResponseEntity;
 import org.cool.zoo.entities.users.Role;
 import org.cool.zoo.repositories.RoleRepository;
@@ -67,12 +68,13 @@ public class RoleController {
     }
 
     @RequestMapping(value = Routes.ID, method = RequestMethod.PUT)
-    public JResponseEntity<Object> updateRole(Role role) {
-        if ( role != null && role.getId() > 0) {
-            roleService.saveOrUpdate(role);
-            return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
+    public JResponseEntity<Object> updateRole(@RequestBody Role role, Long id) {
+        Role exist = roleService.findById(id);
+        if ( exist == null) {
+            return ResponseFactory.build("UPDATE Failed", HttpStatus.NOT_FOUND);
         }
-        return ResponseFactory.build("Please specify role you want to update..!", HttpStatus.NOT_FOUND);
+        roleService.saveOrUpdate(role);
+        return ResponseFactory.build("SUCCESS", HttpStatus.OK);
     }
 
 }
