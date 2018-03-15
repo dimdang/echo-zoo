@@ -99,8 +99,7 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "table_user_role", joinColumns = {
             @JoinColumn(name = "user_id", nullable = false, updatable = true)},
-            inverseJoinColumns = {@JoinColumn(name = "role_id",
-                    nullable = false, updatable = true)})
+            inverseJoinColumns = {@JoinColumn(name = "role_id", nullable = false, updatable = true)})
     public Set<Role> getAuthorities() {
         return authorities;
     }

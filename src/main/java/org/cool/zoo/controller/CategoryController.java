@@ -69,7 +69,6 @@ public class CategoryController {
         if (existCategory == null)
             return ResponseFactory.build("Category not found", HttpStatus.NOT_FOUND);
 
-        category.setId(id);
         categoryService.saveOrUpdate(category);
         return ResponseFactory.build("UPDATE SUCCESS", HttpStatus.OK);
 
